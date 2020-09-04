@@ -50,7 +50,6 @@ class Logics:
     def get_idx_of_matching_seq(self, full_seq, trgt_seq):
         plus_strand_list = []
         minus_strand_list = []
-
         minus_seq = full_seq.complement()
 
         for idx in range(len(full_seq) - len(trgt_seq)):
@@ -103,7 +102,7 @@ class Logics:
 
                 result_list.append([trgt_seq, "+"])
             else:
-                trgt_seq = str(full_seq.complement()[idx - len_pam - len_aftr_pam: idx + len_spacer])
+                trgt_seq = str(full_seq.complement()[idx - len_pam - len_aftr_pam: idx + len_spacer])[::-1]
 
                 if self.is_too_short(trgt_seq, len_spacer + len_pam + len_aftr_pam):
                     continue

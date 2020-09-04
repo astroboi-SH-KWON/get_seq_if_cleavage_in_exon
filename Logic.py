@@ -81,6 +81,36 @@ class Logics:
                     result_list.append(tmp_idx)
 
         return result_list
+    def is_too_short(self, trgt_seq, len_trgt):
+        if len(trgt_seq) < len_trgt:
+            return True
+        return False
+
+    def get_trgt_seq_in_idx_list(self, full_seq, idx_list, init, plus=True):
+        result_list = []
+        len_spacer = init[0]
+        cleavage = init[1]
+        pam_seq = init[2]
+        len_pam = len(pam_seq)
+        len_aftr_pam = init[3]
+
+        for idx in idx_list:
+            if plus:
+                trgt_seq = str(full_seq[idx - len_spacer: idx + len_pam + len_aftr_pam])
+
+                if self.is_too_short(trgt_seq, len_spacer + len_pam + len_aftr_pam):
+                    continue
+
+                result_list.append([trgt_seq, "+"])
+            else:
+                trgt_seq = str(full_seq.complement()[idx - len_pam - len_aftr_pam: idx + len_spacer])
+
+                if self.is_too_short(trgt_seq, len_spacer + len_pam + len_aftr_pam):
+                    continue
+
+                result_list.append([trgt_seq, "-"])
+
+        return result_list
 
 
 

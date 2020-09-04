@@ -9,13 +9,13 @@ import LogicPrep
 WORK_DIR = os.getcwd() + "/"
 PROJECT_NAME = WORK_DIR.split("/")[-2]
 NCBI = "NCBI/"
-INPUT = "input/"
-genbank_file_name = "Apob_NCBI.gb"
+genbank_file_name = "Apob_NCBI"
 
 LEN_SPACER = 43
 CLEAVAGE = 3
 PAM = 'NNGRRT'
 LEN_AFTR_PAM = 3
+INIT = [LEN_SPACER, CLEAVAGE, PAM, LEN_AFTR_PAM]
 ############### end setting env #################
 
 """
@@ -45,19 +45,24 @@ def main1():
     logic_prep = LogicPrep.LogicPreps()
     logic = Logic.Logics()
 
-    seq_record = util.get_seq_record_from_genbank(WORK_DIR + NCBI + genbank_file_name)
+    seq_record = util.get_seq_record_from_genbank(WORK_DIR + NCBI + genbank_file_name + ".gb")
     cds_idx_list = logic_prep.get_cds_idx_arr_to_list(seq_record)
     plus_strand_list, minus_strand_list = logic.get_idx_of_matching_seq(seq_record.seq, PAM)
 
-    plus_list = logic.get_idx_in_list(plus_strand_list, cds_idx_list)
-    minus_list = logic.get_idx_in_list(plus_strand_list, cds_idx_list, False)
-    print(seq_record.seq[2992:2992+10])
-    print(seq_record.seq.complement()[2992:2992+10])
-    print(seq_record.seq.complement()[2992-10:2992+10])
-    for idx in range(len(minus_list)):
-        print("plus : ", plus_list[idx], " ", seq_record.seq[plus_list[idx]:plus_list[idx] +len(PAM)])
-        reverse_seq = seq_record.seq.complement()
-        print("minu : ", minus_list[idx], " ", reverse_seq[minus_list[idx]-len(PAM):minus_list[idx] ])
+    plus_idx_list = logic.get_idx_in_list(plus_strand_list, cds_idx_list)
+    minus_idx_list = logic.get_idx_in_list(minus_strand_list, cds_idx_list, False)
+
+    filtered_plus_idx_list = logic_prep.filter_out_dupl(plus_idx_list)
+    filtered_minus_idx_list = logic_prep.filter_out_dupl(minus_idx_list)
+
+    plus_seq_list = logic.get_trgt_seq_in_idx_list(seq_record.seq, filtered_plus_idx_list, INIT)
+    minus_seq_list = logic.get_trgt_seq_in_idx_list(seq_record.seq, filtered_minus_idx_list, INIT, False)
+
+    merge_list = logic_prep.merge_list([plus_seq_list, minus_seq_list])
+    tot_list = logic_prep.sort_list_by_ele(merge_list, 0)
+
+    header = ["sequence", "strand"]
+    util.make_excel(WORK_DIR + "output/result_" + genbank_file_name, header, tot_list)
 
 
 

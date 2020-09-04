@@ -1,6 +1,5 @@
 import time
 import os
-from Bio import SeqIO
 
 import Util
 import Logic

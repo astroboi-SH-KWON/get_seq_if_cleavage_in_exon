@@ -25,7 +25,9 @@ def main():
 
     for file_idx in range(len(INIT_RULE)):
         seq_record = util.get_seq_record_from_genbank(WORK_DIR + NCBI + FILE_NAME[file_idx] + ".gb")
-        cds_idx_list = logic_prep.get_cds_idx_arr_to_list(seq_record)  # add type 'mRNA' 20200907
+        cds_idx_list = logic_prep.get_cds_idx_arr_to_list(seq_record)
+        # add type 'mRNA' 20200907
+        cds_idx_list.extend(logic_prep.get_cds_idx_arr_to_list(seq_record, 'mRNA'))
 
         init_rule = INIT_RULE[file_idx]
         pam_seq = init_rule[2]

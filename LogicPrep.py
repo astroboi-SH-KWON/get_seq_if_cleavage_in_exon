@@ -6,16 +6,12 @@ class LogicPreps:
         self.ext_dat = ".dat"
         self.ext_gtf = ".gtf"
 
-    def get_cds_idx_arr_to_list(self, seq_rec):
+    def get_cds_idx_arr_to_list(self, seq_rec, f_type='CDS'):
         result_list = []
 
         if seq_rec.features:
             for feature in seq_rec.features:
-                if feature.type == "CDS":
-                    result_list.append([idx for idx in feature.location])
-
-                # add type 'mRNA' 20200907
-                if feature.type == "mRNA":
+                if feature.type == f_type:
                     result_list.append([idx for idx in feature.location])
 
                     # TODO make dict by transcript_id

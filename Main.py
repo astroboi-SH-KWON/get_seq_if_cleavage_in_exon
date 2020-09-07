@@ -25,7 +25,7 @@ def main():
 
     for file_idx in range(len(INIT_RULE)):
         seq_record = util.get_seq_record_from_genbank(WORK_DIR + NCBI + FILE_NAME[file_idx] + ".gb")
-        cds_idx_list = logic_prep.get_cds_idx_arr_to_list(seq_record)
+        cds_idx_list = logic_prep.get_cds_idx_arr_to_list(seq_record)  # add type 'mRNA' 20200907
 
         init_rule = INIT_RULE[file_idx]
         pam_seq = init_rule[2]
@@ -44,7 +44,8 @@ def main():
         tot_list = logic_prep.sort_list_by_ele(merge_list, 0)
 
         header = ["sequence", "strand"]
-        util.make_excel(WORK_DIR + "output/result_" + FILE_NAME[file_idx], header, tot_list)
+        util.make_excel(WORK_DIR + "output/result_mRNA_" + FILE_NAME[file_idx], header, tot_list)
+        # util.make_excel(WORK_DIR + "output/result_" + FILE_NAME[file_idx], header, tot_list)
 
 
 if __name__ == '__main__':

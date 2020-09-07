@@ -14,6 +14,10 @@ class LogicPreps:
                 if feature.type == "CDS":
                     result_list.append([idx for idx in feature.location])
 
+                # add type 'mRNA' 20200907
+                if feature.type == "mRNA":
+                    result_list.append([idx for idx in feature.location])
+
                     # TODO make dict by transcript_id
                     # print("feature.qualifiers : ", feature.qualifiers)
                     # result_dict.update({feature.qualifiers["protein_id"][0]: [idx for idx in feature.location]})
